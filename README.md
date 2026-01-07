@@ -1,62 +1,84 @@
-# TalentScout Hiring Assistant
+# TalentScout Hiring Assistant 🤖
+> **An Intelligent, Cloud-Ready AI Interviewer built with Streamlit & LLaMA 3.**
 
-## Project Overview
-TalentScout is an intelligent, LLM-driven Hiring Assistant chatbot designed to screen candidates. It engages users in a conversation to gather essential details (Name, Experience, Tech Stack, etc.) and dynamically generates technical screening questions based on the declared technology stack.
+TalentScout is a smart hiring assistant designed to screen candidates efficiently. It engages users in a natural conversation to gather details, parses uploaded resumes, dynamically generates technical questions based on the user's stack, and provides a structured feedback report at the end.
 
-## Installation Instructions
-1. **Prerequisites**:
-   - Python 3.8+
-   - [Ollama](https://ollama.com/) installed and running.
-   - LLaMA 3 model pulled (`ollama pull llama3`).
-   - **Verification**: Run `ollama list` in your terminal to ensure `llama3` is available.
+## ✨ Key Features
+- **🧠 Cloud Brain**: Powered by **LLaMA 3 (via Groq API)** for lightning-fast, intelligent responses.
+- **📄 AI Resume Parser**: Upload a PDF resume, and the AI extracts key details (Name, Stack, Experience) automatically.
+- **⚡ Dynamic Questioning**: No hardcoded scripts. The AI generates relevant technical questions based on the candidate's specific tech stack.
+- **📊 Instant Feedback**: Generates a structured scorecard (Strengths, Weaknesses, Hire/No-Hire) after the interview.
+- **🔐 Secure Deployment**: Uses standard Secret Management to keep API keys safe.
 
-2. **Setup**:
-   ```bash
-   # Clone the repository (if applicable)
-   # git clone <repo-url>
-   # cd TalentScout
+---
 
-   # Create and activate virtual environment
-   # Mac/Linux:
-   python3 -m venv venv
-   source venv/bin/activate
-   # Windows:
-   # python -m venv venv
-   # .\venv\Scripts\activate
+## 🚀 Quick Start (Cloud Mode)
 
-   # Install dependencies
-   pip install -r requirements.txt
-   ```
+### 1. Prerequisites
+- Python 3.8+
+- A free API Key from [Groq Console](https://console.groq.com/keys).
 
-3. **Running the Application**:
-   Ensure Ollama is running in the background.
-   ```bash
-   streamlit run app.py
-   ```
+### 2. Installation
+```bash
+# Clone the repository
+git clone https://github.com/YOUR_USERNAME/TalentScout.git
+cd TalentScout
 
-## Usage Guide
-- Launch the app using `streamlit run app.py`.
-- The chatbot will greet you.
-- Provide the requested information (Name, Email, etc.) naturally.
-- Once you declare your tech stack, the assistant will generate technical questions.
-- Type "exit" or "bye" at any time to end the conversation.
-- Use the **"🔄 Reset Conversation"** button in the sidebar to start a new interview session instantly.
+# Create virtual environment
+python3 -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
-## Technical Details
-- **Frontend**: Streamlit
-- **LLM**: LLaMA 3 (via Ollama local inference)
-- **Architecture**: 
-    - `app.py`: Main Streamlit UI and event loop.
-    - `prompts.py`: Contains the System Prompt that defines the persona and logic.
-    - `utils.py`: Handles communication with the local Ollama instance.
-- **Data Handling**: Session-based ephemeral storage. No persistent database is used, complying with privacy requirements for this demo.
+# Install dependencies
+pip install -r requirements.txt
+```
 
-## Prompt Design
-The core logic resides in a structured **System Prompt** (`prompts.py`). Instead of hardcoded if/else statements, we utilize the instruction following capabilities of LLaMA 3. 
-- **Information Gathering**: The LLM is instructed to check history and only ask for missing fields one by one.
-- **Dynamic Questioning**: The prompt detects when the "Tech Stack" is provided and triggers the "Technical Screening Questions" section.
-- **Safety**: Robust constraints prevent the bot from deviating from its role.
+### 3. Configuration (Secrets)
+Create a file named `.streamlit/secrets.toml` in the project folder to save your key securely:
+```toml
+# .streamlit/secrets.toml
+GROQ_API_KEY = "gsk_your_actual_key_here"
+```
+*(This prevents you from having to paste the key every time you run the app).*
 
-## Challenges & Solutions
-- **State Management**: Handling the state in a stateless LLM call layout was solved by feeding the entire valid conversation history back to the model on every turn.
-- **Prompt Adherence**: Ensuring the model asks one question at a time required specific negative constraints ("Do NOT ask for everything at once").
+### 4. Run the App
+```bash
+streamlit run app.py
+```
+Visit `localhost:8502` in your browser.
+
+---
+
+## ☁️ Deployment (Streamlit Cloud)
+This project is ready for one-click deployment.
+
+1.  Push your code to **GitHub**.
+2.  Go to [Streamlit Community Cloud](https://share.streamlit.io).
+3.  Deploy the repository.
+4.  **Crucial Step**: In the "Advanced Settings" -> "Secrets" menu, paste your API key:
+    ```toml
+    GROQ_API_KEY = "gsk_your_actual_key_here"
+    ```
+5.  Click Deploy! 🚀
+
+---
+
+## 🛠️ Technical Architecture
+- **Frontend**: Streamlit (Python).
+- **AI Model**: LLaMA-3-70b/8b via **Groq Cloud API**.
+- **PDF Extraction**: `PyPDF2` + `llama-3.1-8b-instant` for structured extraction.
+- **State Management**: `st.session_state` for conversation history.
+
+### Directory Structure
+```
+TalentScout/
+├── app.py              # Main Application Logic
+├── utils.py            # AI Engine (Groq Client, Resume Parser)
+├── prompts.py          # System Instructions & Persona
+├── requirements.txt    # Dependencies
+├── .streamlit/         # Secrets & Config
+│   └── secrets.toml    # (IGNORED by Git) API Keys
+└── assets/             # Images/Logos
+```
+
+## 🛡️ License
+Open Source. MIT License.
