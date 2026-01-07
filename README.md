@@ -80,5 +80,21 @@ TalentScout/
 └── assets/             # Images/Logos
 ```
 
+## 🧠 Prompt Engineering Strategy (Assignment Highlight)
+The core logic of TalentScout relies on **iterative prompt engineering** rather than hardcoded logic.
+1.  **State-Awareness**: The System Prompt includes a dynamic set of instructions that changes based on conversation history.
+2.  **Information Extraction**: The LLM is instructed to parse user intent (e.g., if a user says "I am Bob, email is bob@co", it records both without asking).
+3.  **Dynamic Branching**:
+    - *Phase 1 (Info)*: The bot autonomously decides when it has enough info to move to Phase 2.
+    - *Phase 2 (Technical)*: The bot generates questions *only* for the specific tech stack mentioned by the candidate (e.g., "Ask 3 Python questions" vs "Ask 3 Java questions").
+
+## 🚧 Challenges & Solutions
+- **Challenge**: The model would sometimes halluciation "NOTHING FOLLOWS" or system tags.
+    - **Solution**: Implemented a string-cleaning post-processor in `utils.py` to strip these artifacts.
+- **Challenge**: State management in a stateless Streamlit app.
+    - **Solution**: Used `st.session_state` to persist the message history and fed the entire context back to the LLM on every turn.
+- **Challenge**: Deployment specific API Keys.
+    - **Solution**: Implemented a dual-check system (Secrets File + User Input) to ensure seamless usage locally and on cloud.
+
 ## 🛡️ License
 Open Source. MIT License.
